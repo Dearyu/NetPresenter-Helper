@@ -1,5 +1,5 @@
 # NetPresenter-Plugin
-为NetPresenter提供的快速生成代码插件.
+为[NetPresenter](https://github.com/Dearyu/NetPresenter)提供的快速生成代码插件.
 
 ### 使用方法
 
@@ -8,7 +8,7 @@
   
 ### 说明  
 
-- 插件中头部包括tag、onSuc、onFail、onStart、onFinish等设置 
+- 插件头部包括tag、onSuc、onFail、onStart、onFinish等设置 
 - 插件中间部分是需要实现回调的方法名字(对应为回调中的tag)
 
 ### 图片示例  
