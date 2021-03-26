@@ -13,4 +13,4 @@
 
 ### 图片示例  
 
-![图片示例](https://github.com/Dearyu/NetPresenter-Plugin/blob/master/img/NetPresenterPluginDemo.gif)
+![图片示例](https://github.com/Dearyu/NetPresenter-Plugin/blob/master/img/NetPresenterHelperDemo.gif)
