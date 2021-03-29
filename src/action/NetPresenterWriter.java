@@ -31,6 +31,7 @@ public class NetPresenterWriter extends WriteCommandAction {
     private Set<String> mCallBack;
     private List<ElementBean> mMethods;
     private PsiElementFactory mFactory;
+    private boolean isOne = true;
 
     private NetPresenterWriter(@Nullable Project project, @NotNull PsiFile... files) {
         super(project, files);
@@ -45,12 +46,20 @@ public class NetPresenterWriter extends WriteCommandAction {
         mCallBack = callback;
         mMethods = methods;
         mFactory = JavaPsiFacade.getElementFactory(mProject);
-        System.out.println("mPsiClass:" + mPsiClass.toString());
-        System.out.println("mPsiFile:" + mPsiFile.toString());
-        System.out.println("mTag:" + mTag.toString());
-        System.out.println("mCallBack:" + mCallBack.toString());
+//        System.out.println("mPsiClass:" + mPsiClass.toString());
+//        System.out.println("mPsiFile:" + mPsiFile.toString());
+//        System.out.println("mTag:" + mTag.toString());
+//        System.out.println("mCallBack:" + mCallBack.toString());
+        int num = 0;
         for (ElementBean method : methods) {
-            System.out.println("mMethods:" + method.toString());
+            if (method.isCheck()) {
+                num++;
+            }
+            if (num > 1) {
+                isOne = false;
+                break;
+            }
+//            System.out.println("mMethods:" + method.toString());
         }
     }
 
@@ -92,15 +101,22 @@ public class NetPresenterWriter extends WriteCommandAction {
         }
 //        method.append("type = ").append("netpresenter.annotations.CallBackType.SUC").append(")")
         method.append("type = ").append("CallBackType.SUC").append(")")
-                .append("public void getNetMsgSuc(java.lang.String tag, java.lang.Object bean){").
-                append("switch (tag){");
-        for (ElementBean element : mMethods) {
-            if (element.isCheck()) {
-                method.append("case ").append("\"" + element.getMethodTag() + "\"").append(": break;");
-            }
-        }
-        method.append("}}");
+                .append("public void getNetMsgSuc(java.lang.String tag, java.lang.Object bean){");
+        addSwitch(method);
+        method.append("}");
         mPsiClass.add(mFactory.createMethodFromText(method.toString(), mPsiClass));
+    }
+
+    private void addSwitch(StringBuilder method) {
+        if (null != mMethods && !isOne) {
+            method.append("switch (tag){");
+            for (ElementBean element : mMethods) {
+                if (element.isCheck()) {
+                    method.append("case ").append("\"" + element.getMethodTag() + "\"").append(": break;");
+                }
+            }
+            method.append("}");
+        }
     }
 
     private void addFailMethod() {
@@ -112,14 +128,9 @@ public class NetPresenterWriter extends WriteCommandAction {
         }
 //        method.append("type = ").append("netpresenter.annotations.CallBackType.FAIL").append(")")
         method.append("type = ").append("CallBackType.FAIL").append(")")
-                .append("public void getNetMsgFail(java.lang.String tag, java.lang.String... msgs){").
-                append("switch (tag){");
-        for (ElementBean element : mMethods) {
-            if (element.isCheck()) {
-                method.append("case ").append("\"" + element.getMethodTag() + "\"").append(": break;");
-            }
-        }
-        method.append("}}");
+                .append("public void getNetMsgFail(java.lang.String tag, java.lang.String... msgs){");
+        addSwitch(method);
+        method.append("}");
         mPsiClass.add(mFactory.createMethodFromText(method.toString(), mPsiClass));
     }
 
@@ -132,14 +143,9 @@ public class NetPresenterWriter extends WriteCommandAction {
         }
 //        method.append("type = ").append("netpresenter.annotations.CallBackType.START").append(")")
         method.append("type = ").append("CallBackType.START").append(")")
-                .append("public void getNetMsgStart(java.lang.String tag){").
-                append("switch (tag){");
-        for (ElementBean element : mMethods) {
-            if (element.isCheck()) {
-                method.append("case ").append("\"" + element.getMethodTag() + "\"").append(": break;");
-            }
-        }
-        method.append("}}");
+                .append("public void getNetMsgStart(java.lang.String tag){");
+        addSwitch(method);
+        method.append("}");
         mPsiClass.add(mFactory.createMethodFromText(method.toString(), mPsiClass));
     }
 
@@ -152,14 +158,9 @@ public class NetPresenterWriter extends WriteCommandAction {
         }
 //        method.append("type = ").append("netpresenter.annotations.CallBackType.FINISH").append(")")
         method.append("type = ").append("CallBackType.FINISH").append(")")
-                .append("public void getNetMsgFinish(java.lang.String tag){").
-                append("switch (tag){");
-        for (ElementBean element : mMethods) {
-            if (element.isCheck()) {
-                method.append("case ").append("\"" + element.getMethodTag() + "\"").append(": break;");
-            }
-        }
-        method.append("}}");
+                .append("public void getNetMsgFinish(java.lang.String tag){");
+        addSwitch(method);
+        method.append("}");
         mPsiClass.add(mFactory.createMethodFromText(method.toString(), mPsiClass));
     }
 }
