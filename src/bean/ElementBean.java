@@ -12,6 +12,16 @@ public class ElementBean {
 
     private String methodTag;
 
+    private String objType;
+
+    public String getObjType() {
+        return objType;
+    }
+
+    public void setObjType(String objType) {
+        this.objType = objType;
+    }
+
     public boolean isCheck() {
         return isCheck;
     }

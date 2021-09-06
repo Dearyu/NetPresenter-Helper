@@ -9,6 +9,7 @@ import com.intellij.openapi.actionSystem.DataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import ui.form.NetEntryContent;
@@ -28,6 +29,8 @@ public class NetPresenter extends BaseGenerateAction implements ICancelListener,
     private Editor mEditor;
     private PsiFile mPsiFile;
     private PsiClass mPsiCls;
+    private PsiElement mPsiElement;
+
 
     public NetPresenter() {
         super(null);
@@ -52,6 +55,7 @@ public class NetPresenter extends BaseGenerateAction implements ICancelListener,
     public void actionPerformed(AnActionEvent action) {
         mEditor = action.getData(DataKeys.EDITOR);
         mPsiFile = action.getData(DataKeys.PSI_FILE);
+        mPsiElement = PsiUtils.getPsiElementByEditor(mEditor, mPsiFile);
         mPsiCls = PsiUtils.getPsiClassByEditor(mEditor, mPsiFile);
         if (null != mPsiCls) {
             mElementBeans = PsiUtils.getMethodsName(mPsiCls);
@@ -87,7 +91,7 @@ public class NetPresenter extends BaseGenerateAction implements ICancelListener,
 
     @Override
     public void onConfirm(String tag, Set<String> callback) {
-        new NetPresenterWriter(getTargetClass(mEditor, mPsiFile), mPsiFile, tag, callback, mElementBeans).execute();
+        new NetPresenterWriter(getTargetClass(mEditor, mPsiFile), mPsiFile, tag, callback, mElementBeans, PsiUtils.getPsiElementByEditor(mEditor, mPsiFile)).execute();
         closeNetDialog();
     }
 }

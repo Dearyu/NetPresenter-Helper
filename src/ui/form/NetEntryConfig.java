@@ -1,6 +1,8 @@
 package ui.form;
 
 
+import util.PsiUtils;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -28,8 +30,8 @@ public class NetEntryConfig extends JPanel {
         mTagLabel = new JLabel("Tag");
         mTagLabel.setPreferredSize(new Dimension(40, 30));
 
-        mTag = new JTextField("");
-        mTag.setPreferredSize(new Dimension(80, 26));
+        mTag = new JTextField(PsiUtils.ClsName);
+        mTag.setPreferredSize(new Dimension(200, 26));
 
         mSuc = new JCheckBox("onSuc");
         mSuc.setPreferredSize(new Dimension(70, 30));

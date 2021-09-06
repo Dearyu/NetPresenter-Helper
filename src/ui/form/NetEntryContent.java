@@ -30,7 +30,7 @@ public class NetEntryContent extends JPanel {
         mElementBeans = beans;
         mCancelListener = cancel;
         mConfirmListener = confirm;
-        setPreferredSize(new Dimension(500, 300));
+        setPreferredSize(new Dimension(620, 300));
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         addTitleAndMethods();
         addButton();

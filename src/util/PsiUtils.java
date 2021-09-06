@@ -12,11 +12,13 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.PsiShortNamesCache;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class PsiUtils {
 
     private static final String GET = "retrofit2.http.GET";
     private static final String POST = "retrofit2.http.POST";
+    public static String ClsName = "";
 
 
     public static PsiElement getPsiElementByEditor(Editor editor, PsiFile psiFile) {
@@ -48,6 +50,7 @@ public class PsiUtils {
         GlobalSearchScope globalSearchScope = GlobalSearchScope.fileScope(classFile);
         String fullName = classFile.getName();
         String className = fullName.split("\\.")[0];
+        ClsName = className;
         return PsiShortNamesCache.getInstance(classFile.getProject()).getClassesByName(className, globalSearchScope)[0];
     }
 
@@ -58,6 +61,7 @@ public class PsiUtils {
                 ElementBean bean = new ElementBean();
                 bean.setCheck(true);
                 bean.setMethodTag(method.getName());
+                bean.setObjType(extractMessage(Objects.requireNonNull(method.getReturnTypeElement()).getText()));
                 beans.add(bean);
             }
         }
@@ -86,5 +90,16 @@ public class PsiUtils {
         for (PsiMethod method : cls.getMethods())
             if (isRetorfitServiceMethod(method)) return true;
         return false;
+    }
+
+    public static String extractMessage(String msg) {
+        if (isEmpty(msg)) {
+            return "";
+        }
+        return msg.substring(msg.indexOf('<') + 1, msg.length() - 1);
+    }
+
+    public static boolean isEmpty(String str) {
+        return null == str || "".equals(str);
     }
 }
