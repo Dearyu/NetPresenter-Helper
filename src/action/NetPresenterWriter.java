@@ -34,6 +34,8 @@ public class NetPresenterWriter extends WriteCommandAction {
     // 1.5 添加修改psielement功能
     private PsiElement mPsiElement;
 
+    private boolean isAllOne = false;
+
     private NetPresenterWriter(@Nullable Project project, @NotNull PsiFile... files) {
         super(project, files);
     }
@@ -53,6 +55,7 @@ public class NetPresenterWriter extends WriteCommandAction {
 //        System.out.println("mTag:" + mTag.toString());
 //        System.out.println("mCallBack:" + mCallBack.toString());
         int num = 0;
+        isAllOne = methods.size() <= 1;
         for (ElementBean method : methods) {
             if (method.isCheck()) {
                 num++;
@@ -75,7 +78,9 @@ public class NetPresenterWriter extends WriteCommandAction {
                 case "onSuc":
                     replaceEliment();
                     for (ElementBean element : mMethods) {
-                        addSucMethod(element);
+                        if (element.isCheck()) {
+                            addSucMethod(element);
+                        }
                     }
                     break;
                 case "onFail":
@@ -100,7 +105,7 @@ public class NetPresenterWriter extends WriteCommandAction {
     private void replaceEliment() {
 //        PsiElement psiElement =
         String annotationName = "@NetService(value = \"" + mTag + "\")";
-        mPsiClass.addBefore(mFactory.createAnnotationFromText(annotationName, mPsiClass),mPsiElement);
+        mPsiClass.addBefore(mFactory.createAnnotationFromText(annotationName, mPsiClass), mPsiElement);
 //        try {
 //            mPsiElement.add(mFactory.createAnnotationFromText(annotationName, mPsiClass));
 //        } catch (Exception e) {
@@ -117,7 +122,7 @@ public class NetPresenterWriter extends WriteCommandAction {
         method.append("@NetCallBack(");
         if (!"".equals(mTag)) {
             method.append("value = ").append("\"" + mTag + "\"").append(", ");
-            if (!isOne) { // 如果不是一个方法,则添加tag
+            if (!isOne || !isAllOne) { // 如果不是一个方法,则添加tag
                 method.append("tag = ").append("\"" + elementBean.getMethodTag() + "\"").append(", ");
                 methodName = PsiUtils.ClsName + "_" + elementBean.getMethodTag();
             }
